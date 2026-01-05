@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/rubik_jni/rubik_jni/build_test/_deps/opencv_lib-subbuild/opencv_lib-populate-prefix/src/opencv_lib-populate-stamp/download-opencv_lib-populate.cmake;COMMAND;/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/rubik_jni/rubik_jni/build_test/_deps/opencv_lib-subbuild/opencv_lib-populate-prefix/src/opencv_lib-populate-stamp/verify-opencv_lib-populate.cmake;COMMAND;/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/rubik_jni/rubik_jni/build_test/_deps/opencv_lib-subbuild/opencv_lib-populate-prefix/src/opencv_lib-populate-stamp/extract-opencv_lib-populate.cmake
+source_dir=/home/runner/work/rubik_jni/rubik_jni/build_test/_deps/opencv_lib-src
+work_dir=/home/runner/work/rubik_jni/rubik_jni/build_test/_deps
+url(s)=https://frcmaven.wpi.edu/artifactory/release/edu/wpi/first/thirdparty/frc2025/opencv/opencv-cpp/4.10.0-3/opencv-cpp-4.10.0-3-linuxx86-64.zip
+hash=
+      no_extract=
+
