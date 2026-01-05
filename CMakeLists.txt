@@ -97,16 +97,37 @@ set(CMAKE_INSTALL_RPATH "lib")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-add_library(${PROJECT_NAME} src/main/native/cpp/rubik_jni.cpp)
+# Core library with shared logic
+add_library(rubik_core STATIC src/main/native/cpp/rubik_core.cpp)
 
 target_link_libraries(
-    ${PROJECT_NAME}
+    rubik_core
     PUBLIC
         Threads::Threads
         ${OPENCV_LIB_PATH}
         ${LIB_PATH}/libtensorflowlite_c.so
         ${LIB_PATH}/libtensorflowlite.so
         ${LIB_PATH}/libexternal_delegate.so
+)
+
+target_include_directories(
+    rubik_core
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/native/include
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${JNI_INCLUDE_DIRS}
+        ${OPENCV_INCLUDE_PATH}
+        ${TFLITE_INCLUDE_DIR}
+)
+
+# JNI library
+add_library(${PROJECT_NAME} src/main/native/cpp/rubik_jni.cpp)
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE
+        rubik_core
 )
 
 target_include_directories(
@@ -120,6 +141,48 @@ target_include_directories(
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "\\\$ORIGIN/")
+
+# Python bindings (optional, only if Python is found)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+
+if(BUILD_PYTHON_BINDINGS)
+    find_package(Python3 COMPONENTS Interpreter Development)
+    
+    if(Python3_FOUND)
+        # Fetch pybind11
+        FetchContent_Declare(
+            pybind11
+            URL https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.zip
+            DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+        )
+        FetchContent_MakeAvailable(pybind11)
+        
+        # Python module
+        pybind11_add_module(rubik_py src/main/native/cpp/rubik_py.cpp)
+        
+        target_link_libraries(
+            rubik_py
+            PRIVATE
+                rubik_core
+        )
+        
+        target_include_directories(
+            rubik_py
+            PRIVATE
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/main/native/include
+                ${OPENCV_INCLUDE_PATH}
+                ${TFLITE_INCLUDE_DIR}
+        )
+        
+        set_target_properties(rubik_py PROPERTIES INSTALL_RPATH "\\\$ORIGIN/")
+        
+        install(TARGETS rubik_py LIBRARY DESTINATION .)
+        
+        message(STATUS "Python bindings will be built")
+    else()
+        message(STATUS "Python not found, skipping Python bindings")
+    endif()
+endif()
 
 include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME})

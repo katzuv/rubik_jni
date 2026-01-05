@@ -1,7 +1,14 @@
 build
+build_*
 cmake_build
 *.gradle
 *.vscode
 bin
 *.onnx
 *.jar
+*.pyc
+__pycache__
+*.egg-info
+dist
+*.so
+detection_results.jpg
