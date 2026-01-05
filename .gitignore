@@ -5,3 +5,9 @@ cmake_build
 bin
 *.onnx
 *.jar
+*.pyc
+__pycache__
+*.egg-info
+dist
+*.so
+detection_results.jpg
